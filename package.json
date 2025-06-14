@@ -18,6 +18,12 @@
     "recharts": "^2.15.3",
     "web-vitals": "^2.1.4"
   },
+
+  "engines": {
+    "node": "18.17.0",
+    "npm": "9.8.1"
+  },
+
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
