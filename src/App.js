@@ -28,7 +28,8 @@ import {
   FileText,
   PieChart,
   AlertCircle,
-  Zap
+  Zap,
+  X
 } from 'lucide-react';
 
 // Mock data for the application
@@ -74,8 +75,96 @@ function VitaTrackPro() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [selectedRegion, setSelectedRegion] = useState('all');
+  
+  // Modal states
+  const [showAddProductModal, setShowAddProductModal] = useState(false);
+  const [showAddSPGModal, setShowAddSPGModal] = useState(false);
+  const [showAddStoreModal, setShowAddStoreModal] = useState(false);
+  
+  // Form states
+  const [newProduct, setNewProduct] = useState({
+    name: '',
+    sku: '',
+    category: 'Vitamin C',
+    supplier: 'PT Kimia Farma',
+    price: '',
+    cost: '',
+    stock: '',
+    reorderLevel: ''
+  });
+  
+  const [newSPG, setNewSPG] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    territory: '',
+    region: 'Jakarta',
+    bankName: 'BCA',
+    bankAccount: '',
+    bankAccountName: ''
+  });
+  
+  const [newStore, setNewStore] = useState({
+    name: '',
+    address: '',
+    city: '',
+    region: 'Jakarta',
+    spg: '',
+    contactPerson: '',
+    contactPhone: ''
+  });
 
-  // Format currency to Indonesian Rupiah
+  // Handle form submissions
+  const handleAddProduct = (e) => {
+    e.preventDefault();
+    // Here you would integrate with your Supabase database
+    console.log('Adding product:', newProduct);
+    alert(`Product "${newProduct.name}" added successfully!\n\nIn production, this would save to your Supabase database.`);
+    setShowAddProductModal(false);
+    setNewProduct({
+      name: '',
+      sku: '',
+      category: 'Vitamin C',
+      supplier: 'PT Kimia Farma',
+      price: '',
+      cost: '',
+      stock: '',
+      reorderLevel: ''
+    });
+  };
+
+  const handleAddSPG = (e) => {
+    e.preventDefault();
+    console.log('Adding SPG:', newSPG);
+    alert(`SPG "${newSPG.name}" added successfully!\n\nIn production, this would save to your Supabase database.`);
+    setShowAddSPGModal(false);
+    setNewSPG({
+      name: '',
+      email: '',
+      phone: '',
+      territory: '',
+      region: 'Jakarta',
+      bankName: 'BCA',
+      bankAccount: '',
+      bankAccountName: ''
+    });
+  };
+
+  const handleAddStore = (e) => {
+    e.preventDefault();
+    console.log('Adding store:', newStore);
+    alert(`Store "${newStore.name}" added successfully!\n\nIn production, this would save to your Supabase database.`);
+    setShowAddStoreModal(false);
+    setNewStore({
+      name: '',
+      address: '',
+      city: '',
+      region: 'Jakarta',
+      spg: '',
+      contactPerson: '',
+      contactPhone: ''
+    });
+  };
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -279,6 +368,7 @@ function VitaTrackPro() {
                 <button 
                   type="button"
                   className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 flex items-center gap-2"
+                  onClick={() => setShowAddProductModal(true)}
                 >
                   <Plus className="h-4 w-4" />
                   Add Product
@@ -430,6 +520,7 @@ function VitaTrackPro() {
                 <button 
                   type="button"
                   className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-purple-800 flex items-center gap-2"
+                  onClick={() => setShowAddSPGModal(true)}
                 >
                   <Plus className="h-4 w-4" />
                   Add SPG
@@ -558,6 +649,7 @@ function VitaTrackPro() {
                 <button 
                   type="button"
                   className="bg-gradient-to-r from-green-600 to-green-700 text-white px-4 py-2 rounded-lg hover:from-green-700 hover:to-green-800 flex items-center gap-2"
+                  onClick={() => setShowAddStoreModal(true)}
                 >
                   <Zap className="h-4 w-4" />
                   Process All
@@ -950,6 +1042,380 @@ function VitaTrackPro() {
           {renderView()}
         </main>
       </div>
+
+      {/* Add Product Modal */}
+      <Modal 
+        isOpen={showAddProductModal} 
+        onClose={() => setShowAddProductModal(false)}
+        title="Add New Product"
+      >
+        <form onSubmit={handleAddProduct} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+            <input
+              type="text"
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={newProduct.name}
+              onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+              placeholder="e.g., Vitamin C 1000mg"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+            <input
+              type="text"
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={newProduct.sku}
+              onChange={(e) => setNewProduct({...newProduct, sku: e.target.value})}
+              placeholder="e.g., VTC1000"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <select
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={newProduct.category}
+                onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
+              >
+                <option value="Vitamin C">Vitamin C</option>
+                <option value="Multivitamin">Multivitamin</option>
+                <option value="Supplements">Supplements</option>
+                <option value="Vitamin D">Vitamin D</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Supplier</label>
+              <select
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={newProduct.supplier}
+                onChange={(e) => setNewProduct({...newProduct, supplier: e.target.value})}
+              >
+                <option value="PT Kimia Farma">PT Kimia Farma</option>
+                <option value="PT Kalbe Farma">PT Kalbe Farma</option>
+                <option value="PT Dexa Medica">PT Dexa Medica</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Cost Price (IDR)</label>
+              <input
+                type="number"
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={newProduct.cost}
+                onChange={(e) => setNewProduct({...newProduct, cost: e.target.value})}
+                placeholder="45000"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Selling Price (IDR)</label>
+              <input
+                type="number"
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={newProduct.price}
+                onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                placeholder="85000"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Initial Stock</label>
+              <input
+                type="number"
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={newProduct.stock}
+                onChange={(e) => setNewProduct({...newProduct, stock: e.target.value})}
+                placeholder="1000"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Reorder Level</label>
+              <input
+                type="number"
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={newProduct.reorderLevel}
+                onChange={(e) => setNewProduct({...newProduct, reorderLevel: e.target.value})}
+                placeholder="500"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <button
+              type="button"
+              onClick={() => setShowAddProductModal(false)}
+              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex-1 px-4 py-2 text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800"
+            >
+              Add Product
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Add SPG Modal */}
+      <Modal 
+        isOpen={showAddSPGModal} 
+        onClose={() => setShowAddSPGModal(false)}
+        title="Add New SPG/Consignor"
+      >
+        <form onSubmit={handleAddSPG} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <input
+              type="text"
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              value={newSPG.name}
+              onChange={(e) => setNewSPG({...newSPG, name: e.target.value})}
+              placeholder="e.g., Sari Dewi"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+              type="email"
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              value={newSPG.email}
+              onChange={(e) => setNewSPG({...newSPG, email: e.target.value})}
+              placeholder="sari.dewi@example.com"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+              <input
+                type="tel"
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                value={newSPG.phone}
+                onChange={(e) => setNewSPG({...newSPG, phone: e.target.value})}
+                placeholder="+6281234567890"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Region</label>
+              <select
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                value={newSPG.region}
+                onChange={(e) => setNewSPG({...newSPG, region: e.target.value})}
+              >
+                <option value="Jakarta">Jakarta</option>
+                <option value="East Java">East Java</option>
+                <option value="West Java">West Java</option>
+                <option value="Central Java">Central Java</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Territory</label>
+            <input
+              type="text"
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              value={newSPG.territory}
+              onChange={(e) => setNewSPG({...newSPG, territory: e.target.value})}
+              placeholder="e.g., Central Jakarta"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Bank</label>
+              <select
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                value={newSPG.bankName}
+                onChange={(e) => setNewSPG({...newSPG, bankName: e.target.value})}
+              >
+                <option value="BCA">BCA</option>
+                <option value="Mandiri">Mandiri</option>
+                <option value="BNI">BNI</option>
+                <option value="BRI">BRI</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Bank Account</label>
+              <input
+                type="text"
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                value={newSPG.bankAccount}
+                onChange={(e) => setNewSPG({...newSPG, bankAccount: e.target.value})}
+                placeholder="1234567890"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Bank Account Name</label>
+            <input
+              type="text"
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              value={newSPG.bankAccountName}
+              onChange={(e) => setNewSPG({...newSPG, bankAccountName: e.target.value})}
+              placeholder="Sari Dewi"
+            />
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <button
+              type="button"
+              onClick={() => setShowAddSPGModal(false)}
+              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex-1 px-4 py-2 text-white bg-gradient-to-r from-purple-600 to-purple-700 rounded-lg hover:from-purple-700 hover:to-purple-800"
+            >
+              Add SPG
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Add Store Modal */}
+      <Modal 
+        isOpen={showAddStoreModal} 
+        onClose={() => setShowAddStoreModal(false)}
+        title="Add New Store"
+      >
+        <form onSubmit={handleAddStore} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Store Name</label>
+            <input
+              type="text"
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              value={newStore.name}
+              onChange={(e) => setNewStore({...newStore, name: e.target.value})}
+              placeholder="e.g., Guardian Central Park"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+            <textarea
+              required
+              rows="2"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              value={newStore.address}
+              onChange={(e) => setNewStore({...newStore, address: e.target.value})}
+              placeholder="Full store address"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+              <input
+                type="text"
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                value={newStore.city}
+                onChange={(e) => setNewStore({...newStore, city: e.target.value})}
+                placeholder="Jakarta"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Region</label>
+              <select
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                value={newStore.region}
+                onChange={(e) => setNewStore({...newStore, region: e.target.value})}
+              >
+                <option value="Jakarta">Jakarta</option>
+                <option value="East Java">East Java</option>
+                <option value="West Java">West Java</option>
+                <option value="Central Java">Central Java</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Assigned SPG</label>
+            <select
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              value={newStore.spg}
+              onChange={(e) => setNewStore({...newStore, spg: e.target.value})}
+            >
+              <option value="">Select an SPG</option>
+              {mockData.spgs.map(spg => (
+                <option key={spg.id} value={spg.name}>{spg.name} - {spg.territory}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Contact Person</label>
+              <input
+                type="text"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                value={newStore.contactPerson}
+                onChange={(e) => setNewStore({...newStore, contactPerson: e.target.value})}
+                placeholder="Store manager name"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Contact Phone</label>
+              <input
+                type="tel"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                value={newStore.contactPhone}
+                onChange={(e) => setNewStore({...newStore, contactPhone: e.target.value})}
+                placeholder="+6281234567890"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <button
+              type="button"
+              onClick={() => setShowAddStoreModal(false)}
+              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex-1 px-4 py-2 text-white bg-gradient-to-r from-green-600 to-green-700 rounded-lg hover:from-green-700 hover:to-green-800"
+            >
+              Add Store
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }
