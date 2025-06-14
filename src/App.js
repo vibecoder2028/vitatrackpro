@@ -1,3 +1,9 @@
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = 'your-supabase-url'
+const supabaseKey = 'your-supabase-anon-key'
+const supabase = createClient(supabaseUrl, supabaseKey)
+
 import React, { useState, useMemo } from 'react';
 import { 
   BarChart3, 
